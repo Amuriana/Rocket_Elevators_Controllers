@@ -1,299 +1,299 @@
 '------------------------------------ STARTING  SEQUENCE-------------------------------------------'
- sequence start up 
-   set System Clock = current time
-   set Battery      = On
-   set Total Floors = 66
-   set Total Cages  =  12
-   set Total Columns = 4 
-   set Cloumn A      = F-6 to F7
-   set Cloumn B     = F8 to 20
-   set Column C     = F21 to 40
-   set Column D     = F41 to F60
-   set Door Ctrl    = Closed
-   set Cage Staus   = Rest
- end sequence
+ SEQUENCE start up 
+   SET System Clock = current time
+   SET Battery      = On
+   SET TOtal Floors = 66
+   SET TOtal Cages  =  12
+   SET TOtal Columns = 4 
+   SET Cloumn A      = F-6 TO F7
+   SET Cloumn B     = F8 TO 20
+   SET Column C     = F21 TO 40
+   SET Column D     = F41 TO F60
+   SET Door Ctrl    = Closed
+   SET Cage Staus   = Rest
+ END SEQUENCE
 
 '------------------------------------     SAFTEY CHECK     ---------------------------------------------' 
- sequence saftey
-    set System Check = online
-    set Break Check  = operational 
-    set Doors        = closed
-    set load limt    = 1800lb    
-    set max load     = 2000lb
-    set Sensors      = operational
-    set Cage status  = Rest 
-    set 911 button   = operational
+ SEQUENCE saftey
+    SET System Check = online
+    SET Break Check  = operational 
+    SET Doors        = closed
+    SET load limt    = 1800lb    
+    SET max load     = 2000lb
+    SET Sensors      = operational
+    SET Cage status  = Rest 
+    SET 911 butTOn   = operational
     call start up
-    if battery        = off 
-     then halt all service
-    else if battery   = on
-    procced with service
-    end if
- end sequence 
+      IF battery        = off 
+         then halt_all_service
+    ELSE IF battery   = on
+         procced WITH service
+    END IF
+ END SEQUENCE 
 
-'-------------------------------------------  DISPLAY / INPUT PANNEL ---------------------------------------------------'
+'-------------------------------------------  display / INPUT PANNEL ---------------------------------------------------'
 
-sequence display 
-while battery = on 
-    for each cage and each floor in all cloumns
-        print current floor number on outside display 
-        print current floor number on inside display 
-    end for
-end while
-end sequence   
+SEQUENCE display 
+WHILE battery = on 
+    FOR EACH cage_AND each floor IN_all_cloumns
+        PRINT current floor number on outside display 
+        PRINT current floor number on INside display 
+    END for
+END WHILE
+END SEQUENCE   
 
 
 '------------------------------------      LOAD LIMIT         -------------------------------------------'  
- sequence limit sensor  using  limit sensor in cages
-        for each limit sensor in cages
-        set max load  = 2000lb
-        set load limit = 1800lb
-   read pressure plate sensor in cage Floor
-        if load is >1800lb 
-        set respond to new calls
-    else if load is = 1800lb
-         set refuse new calls untill >1800lbs
-   else load is < 1800lbs sound capacity alarm and halt cage until load is = to or >1800lb
-        call max load
-        call door alarm
-    end if    
-       end for 
-  end sequence 
+ SEQUENCE limit_sensor  USING  limit_sensor IN_cages
+        FOR EACH limit_sensor IN cages
+        SET max_load  = 2000lb
+        SET load_limit = 1800lb
+   read pressure_plates_ensor IN _cage_floor
+        IF load IS >1800lb 
+        SET respond TO new calls
+    ELSE IF load IS = 1800lb
+         SET refuse_new_calls untill >1800lbs
+   ELSE load IS < 1800lbs sound_alarm AND stop_cage until load IS = TO or >1800lb
+        call max_load
+        call door_alarm
+    END IF    
+       END for 
+  END SEQUENCE 
+
+
+
 
   
 
 '------------------------------------ CALL BUTTONS  ---------------------------------------'
     
     
-   sequence activate hallCall request
-    for each hallCall buttons in hallCall buttons
-     if down hall call button pressed 
-     set Down button to active directional indicator light
-     call cage dispatcher using direction, and floor number called from 
-     add request to queue 
-     return cage 
+   SEQUENCE activate_hallCall_request
+      FOR EACH hallCall_buttons IN hallCall_buttons
+    IF down_hallCall_button pressed 
+        SET down_button TO activate _directional_indicator_light_on
+        call cage_dispatcher USING direction, AND floor_number_called_from 
+    END IF
+      END FOR
+       ADD request TO queue 
+     RETURN cage 
     
-    
-    sequence activate Pannel Request
-     while battery = on 
-      set Input floor pannel = active on input
-    if floor selected -6F - 7F 
-       call cage dispatcher using column A
-       add request to queue 
-       return cage in corresponding column
-    else if floor selcted 8F - 20F
-       call cage dispatcher using Column B
-       add request to queue 
-       return cage
-    else if floor selected 21F - 40F
-       call cage dispatcher using Column C
-        add request to queue 
-        return cage
-     else floor selected 41F - 60F
-          call cage dispatcher using Column D
-          add request to queue 
-          return cage 
-      else if 
-   end while  
-end sequence 
+      
+    SEQUENCE activate-Pannel_Request
+     WHILE battery = on 
+      SET pannel = active_on _nput
+    IF floor selected -6F - 7F 
+       call cage_dispatcher USING column A
+       ADD request TO queue 
+       RETURN cage IN corresponding_column
+    ELSE IF floor selcted 8F - 20F
+       call cage_dispatcher USING Column B
+       ADD request TO queue 
+       RETURN cage
+    ELSE IF floor_selected 21F - 40F
+       call cage_dispatcher USING Column C
+        ADD request TO queue 
+         RETURN cage
+     ELSE floor_selected 41F - 60F
+          call cage_dispatcher USING Column D
+             ADD request TO queue 
+          RETURN cage 
+     END IF 
+     END WHILE  
+END SEQUENCE 
 
 
-    'sequence
-    '' else is UP call hall button pressed
-     'set down button to active directional indicator light
-     'call cage dispatcher using direction, and floor number called from 
-     'add request to queue
-     'return cage
-     'end if
-     'end for
-    'end sequence 
+    'SEQUENCE
+    '' ELSE IS UP call hall butTOn pressed
+     'SET down butTOn TO active directional INdicaTOr light
+     'call cage dISpatcher USING direction, AND floor number called from 
+     'ADD request TO queue
+     'RETURN cage
+     'END IF
+     'END for
+    'END SEQUENCE 
 
-sequence de-activate Pannel Request button pressed 
-        when  requested cage  arrives to requested floor
+SEQUENCE de-activate_Pannel_Request
+          WHEN  requested_cage  arrives TO requested_floor
         close button indicator light.
-     end sequence
+     END SEQUENCE
 
-      sequence de-activate hallCall button pressed 
-        when  requested cage  arrives to requested floor
-        close button indicator light.
-     end sequence
-       
 
 
 '------------------------------------   CAGE DISPATCHER/Ctrl -------------------------------------'  
    
-    sequence cage dispatcher using activate hallCall request, activate Pannel request 
-      For each cage in the coresponding column 
-        send request using cage and requested floor sorted by corresponding column
-        if avalable pick cage already  resting on this floor
-       return cage
-         else if available pick cage already on route moving to this floor and direction.
-        return cage
-         else if  pick a resting cage on an other floor.
-        return cage
-        else if pick the cage with the lowest load heading the requested direction
-        return cage 
-        else if pick closest cage
-        call dispatch closest cage
-        return cage
-        else determine cage with least requests with queue.length
-        return least requested cage
-       log cage positions and update queue
-        end if
-         end For
-    end sequence   
+    SEQUENCE cage dispatcher USING activate_hallCall_request, activate_Pannel_request 
+      FOR EACH cage IN  coresponding_column 
+        SEND_request USING cage AND requested_floor sorted by corresponding_column
+    IF avalable pick cage already  resting on this floor
+       RETURN cage
+    ELSE IF available pick cage already on route moving TO this floor_AND_direction.
+        RETURN cage
+    ELSE IF  pick a resting_cage on an other floor.
+        RETURN cage
+    ELSE IF pick the cage WITH the lowest_load headingg the requested_direction
+        RETURN cage 
+   ELSE IF pick closest cage
+        call dispatch_closest cage
+        RETURN cage
+    ELSE DETERMINE cage WITH least requests WITH queue.length
+        RETURN least_requested_cage
+       log cage positions AND update queue
+    END IF
+         END For
+    END SEQUENCE   
 
 
-    sequence dispatch closest cage using hallCall request, Floor Request, direction, and cage floor and direction  
-        determine proximity 
-        set shortest travel time to travel distance
-        for each cage in column
-        if cage direction is hallCall direction
-        determine travel distance as the difference beteen hallCall floor and current cage floor
-        if travel distance is < shortest distance then
-        set shortest distance  to  travel distance
-        end for
-        determine closest cage with shortest distance
-       return closest cage
-    end sequence  
+    SEQUENCE dispatch_closest_cage USING hallCall_request, pannel_request, requested_floor, AND cage_floor AND direction  
+        DETERMINE proximity 
+    SET shortest travel time TO travel distance
+        FOR EACH cage IN column
+    IF cage_direction IS hallCall_direction
+        DETERMINE travel distance as the dIFference beteen hallCall floor AND current cage floor
+    IF travel dIStance IS < shortest distance then
+        SET shortest_distance  TO  travel_distance
+    END for
+        DETERMINE closest_cage WITH shortest_distance
+       RETURN closest_cage
+    END SEQUENCE  
 
 
 '-----------------------------------SEND REQUEST TO CAGE QUEUE  -------------------------------------'   
-    sequence Send dispatcher request using cage, requested floor, and Pannel request
-      add requested floor to queue
-       call sort request queue with request queue returning sorted requests 
-     end sequence
+    SEQUENCE SEND dispatcher_request to queue USING  hallCALL_request pannel_request cage, requested_floor,
+      ADD requested floor TO queue
+       call sort_request_queue WITH request_queue RETURNING sorted_requests 
+     END SEQUENCE
 
-     sequence sort request queue using request queue and requested cage direction
-      if cage direction is up
-        determine by assending order
-         else if  cage direction is down
-        determine by descending order
-         set request queue to sorted request queue
-           return sorted requests queue
-    end sequence     
+     SEQUENCE sort_request_queue USING request_queue AND requested_cage_direction
+      IF cage direction IS up
+         DETERMINE by assending_order
+      ELSE IF  cage direction IS down
+         DETERMINE by descending_order
+         SET request queue TO sorted request queue
+           RETURN sorted requests queue
+    END SEQUENCE     
 
 '------------------------------------  CAGE REQUEST QUEUE COMMANDS   ----------------------------------------'
-    sequence operate cages using cage and direction using sorted request queue
-    while battery is on                            
-        while sorted requests in queue
-        read requested floor from sorted requests queue                                                            
-         if cage floor is requested floor then 
+    SEQUENCE operate cages USING cage AND direction USING sorted_request_queue
+    WHILE battery_IS_on                            
+         WHILE sorted_requests IN queue
+          read requested_floor from sorted_requests_queue                                                            
+      IF cage floor IS requested floor then 
           call open door                   
-         else if cage floor is > requested floor then
-           call move down with cage and requested floor     
-         else if cage floor is < requested floor then
-           call move up with cage and requested floor 
-         else if requested floor is in oposite direction of cage path
-         continute till furthest floor called before reversing direction 
-         end if       
-        end while                                                 
-        call rest with cage
-    end while                         
-    end sequence
+      ELSE IF cage floor IS > requested_floor then
+           call move down WITH cage AND requested_floor     
+      ELSE IF cage floor IS < requested_floor then
+           call move up WITH cage AND requested_floor 
+      ELSE IF requested floor IS IN oposite direction of cage path
+           continue till furthest floor called before reversing direction 
+      END IF       
+   END WHILE                                                 
+        call rest WITH cage
+    END WHILE                         
+    END SEQUENCE
 
 
-    sequence move down using cage and requested floor
-       if door open then close
-        call close door with cage 
-        set door closed to continue with operations
-        else stay staionary till door closed
+    SEQUENCE move_down USING cage AND requested_floor
+       IF door_open then close
+         call close_door WITH cage 
+           SET door_closed TO continue WITH operations
+      ELSE stay staionary till door_closed
          
-        call move with cage
-         compute cage floor as cage floor - 1 
-         until cage floor is requested floor
-         call stop with cage
-         call open door using cage
-         repeat for other requests in queue
-     end sequence 
+        call move WITH cage
+          compute cage_floor as cage_floor - 1 
+            until cage_floor IS requested_floor
+             call stop WITH cage
+                call open_door USING cage
+                  repeat for other requests IN queue
+     END SEQUENCE 
 
-    sequence move up using cage and requested floor
-       if door open then close
-        call close door with cage 
-        set door closed to continue with operations
-        else stay staionary till door closed
+    SEQUENCE move_up USING cage AND requested_floor
+       IF door_open then close
+          call close_door WITH cage 
+            SET door_closed TO contINue WITH operations
+      ELSE stay staionary till door_closed
          
-        call move with cage
-         compute cage floor as cage floor + 1 
-         until cage floor is requested floor
-         call stop with cage
-         call open door using cage
-         repeat for other requests in queue
-     end sequence  
+        call move WITH cage
+         compute cage_floor as cage_floor + 1 
+           until cage_floor IS requested_floor
+            call stop WITH cage
+             call open_door USING cage
+               repeat for other requests IN queue
+     END SEQUENCE  
 
-     sequence what do now?
-     if no requests in queue return to resting position
-     end sequence 
+     SEQUENCE what do now?
+     IF no requests IN queue RETURN TO resting_position
+     END SEQUENCE 
 
 '----------------------------------------------  CAGE ACTIONS      -------------------------------------------------'
-     sequence move using cage
-     set cage to moving
-     end sequence 
+     SEQUENCE move USING cage
+     SET cage TO moving
+     END SEQUENCE 
     
 
-    sequence stop using cage
-     set cage to stopped
-     end sequence 
+    SEQUENCE stop USING cage
+     SET cage TO stopped
+     END SEQUENCE 
 
-     sequence rest position
-     for each cage in cages
-     set cage to return to resting position when queue is empty
-     set rest position as lobby
-     end for
-     end sequence 
+     SEQUENCE rest position
+     FOR EACH cage IN cages
+     SET cage TO RETURN TO resting_position when queue IS empty
+     SET rest_position as lobby
+     END for
+     END SEQUENCE 
     
-    sequence morning rush
-    for each cage in all cloumns
+    SEQUENCE morning_rush
+      FOR EACH cage IN  cloumns_ B_C_D
     read system clock
-    if 6-10am 
-    set rest position as lobby floor 
-    else return to lobby
-    end if
-    end for
-    end sequence 
+        IF 6-10am 
+    SET rest_position as lobby floor 
+      ELSE RETURN TO lobby
+    END IF
+     END for
+    END SEQUENCE 
     
-    sequence lunch rush
-    read system clock
-    if 12-1pm
-    set cages 1 and 3 in cloumn B to 20th floor
-    else return to lobby
-    end if
+    SEQUENCE lunch_rush
+    read system_clock
+      IF 12-1pm
+    SET cages 1 AND 3 IN cloumn B TO 20th floor
+      ELSE RETURN TO lobby
+    END IF
     
-    read system clock
-    if 12-1pm
-    set cages 1 and 3 in cloumn C to 40th floor
-    else return to lobby
-    end if
+    read system_clock
+      IF 12-1pm
+    SET cages 1 AND 3 IN cloumn C TO 40th floor
+      ELSE RETURN TO lobby
+    END IF
 
-    read system clock
-    if 12-1pm
-    set cages 1 and 3 in cloumn C to 60th floor
-    else return to lobby
-    end if
+    read system_clock
+      IF 12-1pm
+    SET cages 1 AND 3 IN cloumn C TO 60th floor
+      ELSE RETURN TO lobby
+    END IF
 
-     end sequence 
+     END SEQUENCE 
 
-    sequence closing time
-    
-    read system clock
-    if 5pm
-    set cages 1 and 3 in cloumn B to 20th floor
-    else return to lobby
-    end if
-
-    read system clock
-    if 5pm
-    set cages 1 and 3 in cloumn C to 40th floor
-    else return to lobby
-    end if 
+    SEQUENCE closing_time
     
     read system clock
-    if 5pm
-    set cages 1 and 3 in cloumn D to 60th floor
-    else return to lobby
-    end if
+      IF 5pm
+    SET cages 1 AND 3 IN cloumn B TO 20th floor
+      ELSE RETURN TO lobby
+    END IF
 
-     end sequence 
+    read system clock
+      IF 5pm
+    SET cages 1 AND 3 IN cloumn C TO 40th floor
+      ELSE RETURN TO lobby
+    END IF 
+    
+    read system clock
+      IF 5pm
+    SET cages 1 AND 3 IN cloumn D TO 60th floor
+      ELSE RETURN TO lobby
+    END IF
+
+     END SEQUENCE 
 
 
 
@@ -301,76 +301,79 @@ sequence de-activate Pannel Request button pressed
 
 '------------------------------------  CAGE CALL BUTTONS   ----------------------------------------'
 
-  ''  sequence activate cageCall buttons using direction and floor
-   ''    for each cageCall button in cageCall buttons
-    ''   call request selected floor with direction and floor returning cageCAll button
-     ''  set cageCall button to active
-      '' call send request using requested floor and cage 
-       'request is added to cage queue
-       'end for
-      '' end sequence
+  ''  SEQUENCE activate cageCall butTOns USING direction AND floor
+   ''    FOR EACH cageCall butTOn IN cageCall butTOns
+    ''   call request selected floor WITH direction AND floor RETURNING cageCAll butTOn
+     ''  SET cageCall butTOn TO active
+      '' call sEND request USING requested floor AND cage 
+       'request IS ADDed TO cage queue
+       'END for
+      '' END SEQUENCE
 
-   'sequence deactivate cageCall button using direction and floor
-    ''  for each cageCall button in cageCAll buttons
-     '' call cageCall button with direction and floor returning cageCall button
-      'set cageCall  button to unactive once selected floor reached
-      'end for
-       'end sequence
+   'SEQUENCE deactivate cageCall butTOn USING direction AND floor
+    ''  FOR EACH cageCall butTOn IN cageCAll butTOns
+     '' call cageCall butTOn WITH direction AND floor RETURNING cageCall butTOn
+      'SET cageCall  butTOn TO unactive once selected floor reached
+      'END for
+       'END SEQUENCE
 
 
 '------------------------------------     DOOR CTRL    ----------------------------------------'
-     sequence hall doors
-     syncronize with cage doors
-     end sequence
+     SEQUENCE hall_doors
+        syncronize WITH cage_doors
+     END SEQUENCE
      
-      sequence open door 
-       for each door in doors
-        if cage stopped at floor 
-         set door to open for 10sec then shut 
-       end for      
-      end sequence 
+      SEQUENCE open_door 
+          FOR EACH door IN doors
+        IF cage stopped at floor 
+          SET door TO open for 10sec then shut 
+       END FOR     
+      END SEQUENCE 
 
 
-     sequence close door 
-        for each door in doors
-        if cage stopped at floor and door is open for 10sec
-         set door to closed 
-        end for
-    end sequence 
+     SEQUENCE close_door 
+        FOR EACH door IN doors
+          IF cage sTOpped at floor AND door IS open for 10sec
+         SET door TO closed 
+        END FOR
+    END SEQUENCE 
 
-        sequence open door button
-          for each open door button in open door buttons
-          if cage is stopped on floor and open door button pressed open override timer and open door
-          end for each 
-        end sequence
+        SEQUENCE open_door_buton
+          FOR EACH open_door_button IN open door buttons
+            IF cage IS stopped on floor AND open_door_button pressed then override timer AND open_door
+          END FOR 
+        END SEQUENCE
       
       
-      sequence close door button
-      for each close door button in close door buttons
-          if cage is stopped on floor and close door button pressed, override timer and close door
-          end for each 
-     end sequence 
+      SEQUENCE close_door_button
+        FOR EACH close_door_button IN close_door_buttons
+            IF cage IS stopped on floor AND close_door_button pressed, override timer AND close_door
+          
+          END FOR 
+     END SEQUENCE 
 
-     sequence door alarm
-      trigger alarm
-      if door cannot close due to blockage
-       stop once cleared
-      else if max load reached 
-       stop once = or > 1800lbs
-      end if
-     end sequence
+     SEQUENCE door_alarm
+          SET trigger_alarm
+        IF door cannot close due TO blockage 
+           set  stop once cleared
+        ELSE IF
+        call max load reached 
+            set stop once = or > 1800lbs
+        END IF
+     END SEQUENCE
 
 
 '-------------------------------------------------------  911 PROTOCAL  --------------------------------------------------------'
 
-    sequence 911 button
-     for each 911 button in 911 buttons 
-      set emergency 911 button
-      if pushed contact 911 ambulance
-      push all stored requests from queue to dispatcher,
-      dessend to lobby 
-      set refuse all new requests 
-      set no stops
-      end if
-      end for
-    end sequence 
+    SEQUENCE 911_button
+     FOR EACH 911_button IN 911_buttons 
+      SET emergency 911_button
+        IF pushed contact_911_ambulance
+            set push all stored requests from queue TO 
+             call cage_dispatcher,
+                set dessend TO lobby 
+                SET refuse all new requests 
+                 SET no stops
+        END IF
+      END for
+    END SEQUENCE 
